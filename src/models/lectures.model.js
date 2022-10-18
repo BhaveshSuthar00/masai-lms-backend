@@ -8,10 +8,11 @@ const lecturesSchema = new mongoose.Schema(
     type: { type: String, required: true },
     category: { type: String, required: true },
     status: { type: String, required: true },
-    Scheduled: { type: Date, required: true },
+    scheduled: { type: Date, required: true },
     optional: { type: Boolean, required: true, default: false },
     description: { type: String, required: true },
-    link: { type: String, required: true },
+    link: { type: String },
+    video: { type: String },
   },
   {
     versionKey: false,
