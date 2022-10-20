@@ -10,8 +10,13 @@ router.get("/", async (req, res) => {
       .limit(size)
       .lean()
       .exec();
-    const totalPages = Math.ceil(data.length / size);
-    return res.status(200).json({ assignment: data, totalPages: totalPages });
+    const entryCount = await Assignment.count();
+    const totalPages = Math.ceil(entryCount / size);
+    return res.status(200).json({
+      assignment: data,
+      totalPages: totalPages,
+      totalEntry: entryCount,
+    });
   } catch (err) {
     console.log(err);
     throw new Error(err);

@@ -10,10 +10,14 @@ router.get("/", async (req, res) => {
       .limit(size)
       .lean()
       .exec();
-    const totalPages = Math.ceil(data.length / size);
-    return res.status(200).json({ lectures: data, totalPages: totalPages });
+    const entryCount = await Lectures.count();
+    const totalPages = Math.ceil(entryCount / size);
+    return res
+      .status(200)
+      .json({ lectures: data, totalPages: totalPages, totalEntry: entryCount });
   } catch (err) {
     console.log(err);
+    throw new Error(err);
   }
 });
 
@@ -23,12 +27,13 @@ router.get("/:id", async (req, res) => {
     return res.status(200).json(data);
   } catch (err) {
     console.log(err);
+    throw new Error(err);
   }
 });
 
 router.post("/create", async (req, res) => {
   try {
-    const data = await Lectures.create({ ...req.body, scheduled: new Date() });
+    const data = await Lectures.create(req.body);
     return res.status(200).json(data);
   } catch (err) {
     console.log(err);
