@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Assignment = require("../models/assignments.model");
+const moment = require("moment");
 router.get("/", async (req, res) => {
   try {
     let size = req.query.size || 3;
@@ -34,6 +35,41 @@ router.post("/create", async (req, res) => {
     return res.status(200).json(data);
   } catch (err) {
     console.log(err);
+    throw new Error(err);
+  }
+});
+
+router.get("/api", async (req, res) => {
+  try {
+    const size = req.query.size || 3;
+    const page = req.query.page || 1;
+    let data;
+    let entryCount;
+    let totalPages;
+    const list = ["type", "category", "scheduled", "instructor", "optional"];
+    let drl = [];
+    for (let key in req.query) {
+      if (list.includes(key)) {
+        if (key === "scheduled") {
+          drl.push({ creatingDate: req.query[key] });
+        } else {
+          drl.push({ [key]: req.query[key] });
+        }
+      }
+    }
+    data = await Assignment.find({ $and: drl })
+      .skip((page - 1) * size)
+      .limit(size)
+      .lean()
+      .exec();
+    entryCount = await Assignment.count({ $and: drl });
+    totalPages = Math.ceil(entryCount / size);
+    return res.status(200).json({
+      assignment: data,
+      totalPages: totalPages,
+      totalEntry: entryCount,
+    });
+  } catch (err) {
     throw new Error(err);
   }
 });

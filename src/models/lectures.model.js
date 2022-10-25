@@ -8,6 +8,7 @@ const lecturesSchema = new mongoose.Schema(
     type: { type: String, required: true },
     category: { type: String, required: true },
     scheduled: { type: Date, required: true },
+    creatingDate: { type: String, required: true },
     optional: { type: Boolean, required: true, default: false },
     description: { type: String, required: true },
     link: { type: String },
@@ -15,6 +16,7 @@ const lecturesSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
+    timestamps: true,
   }
 );
 

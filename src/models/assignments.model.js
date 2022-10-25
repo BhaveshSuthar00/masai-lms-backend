@@ -6,6 +6,7 @@ const assignmentSchema = new mongoose.Schema(
     instructor: { type: String, required: true },
     type: { type: String, required: true },
     category: { type: String, required: true },
+    creatingDate: { type: String, required: true },
     scheduled: { type: Date, required: true },
     optional: { type: Boolean, required: true },
     description: { type: String, required: true },
@@ -14,6 +15,7 @@ const assignmentSchema = new mongoose.Schema(
     toDate: { type: Date, required: true },
   },
   {
+    timestamps: true,
     versionKey: false,
   }
 );
