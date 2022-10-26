@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Assignment = require("../models/assignments.model");
 const moment = require("moment");
+const Assignment = require("../models/assignments.model");
 router.get("/", async (req, res) => {
   try {
     let size = req.query.size || 3;
@@ -19,22 +19,21 @@ router.get("/", async (req, res) => {
       totalEntry: entryCount,
     });
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 });
 router.post("/create", async (req, res) => {
   try {
-    const newDate = new Date();
+    // const newDate = new Date();
     const data = await Assignment.create({
       ...req.body,
       scheduled: new Date(),
-      fromDate: new Date(newDate.getDate() + 1),
-      toDate: new Date(newDate.getDate() + 7),
+      creatingDate: moment(new Date()).format("YYYY-MM-DD"),
     });
+    // fromDate: new Date(newDate.getDate() + 1),
+    // toDate: new Date(newDate.getDate() + 7),
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 });
@@ -79,20 +78,12 @@ router.get("/single/:id", async (req, res) => {
     const data = await Assignment.findById(req.params.id).lean().exec();
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 });
 
 router.patch("/:id", async (req, res) => {
   try {
-    // const newDate = new Date();
-    // let formDate = newDate.setDate(newDate.getDate() + 1);
-    // let toDate = newDate.setDate(newDate.getDate() + 7);
-    // req.body = {
-    //   fromDate: formDate,
-    //   toDate: toDate,
-    // };
     const data = await Assignment.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     })
@@ -100,7 +91,7 @@ router.patch("/:id", async (req, res) => {
       .exec();
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 });
 
@@ -111,7 +102,6 @@ router.delete("/:id", async (req, res) => {
       .exec();
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 });
